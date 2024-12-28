@@ -4,11 +4,10 @@ const utterance = new SpeechSynthesisUtterance();
 
 
 
-//NewVoice
 const speakButton = document.getElementById("speakButton");
 
 speakButton.addEventListener("click", () => {
-  utterance.text = "This is a test message."; 
+  utterance.text = summarizedTextArea.value; 
   console.log("Below voice...");
   window.speechSynthesis.speak(utterance); 
 });
@@ -16,18 +15,14 @@ speakButton.addEventListener("click", () => {
 
 
 
-// Disable the submit button initially
 submitButton.disabled = true;
 
-// Listen for input changes and enable/disable the submit button
 const summarizedTextArea = document.getElementById("summary");
 textArea.addEventListener("input", verifyTextLength);
 
-// Handle form submission
 submitButton.addEventListener("click", submitData);
 
 
-// Verify the length of the input text
 function verifyTextLength(e) {
   const textarea = e.target;
   const textLength = textarea.value.length;
@@ -39,7 +34,6 @@ function verifyTextLength(e) {
   }
 }
 
-// Submit the data to the server
 function submitData(e) {
   submitButton.classList.add("submit-button--loading");
 
@@ -61,13 +55,11 @@ function submitData(e) {
   };
 
   fetch('/summarize', requestOptions)
-    .then(response => response.text()) // Response will be summarized text
+    .then(response => response.text())
     .then(summary => {
-      // Update the output text area with the new summary
       summarizedTextArea.value = summary;
       console.log("Actual log: "+ summarizedTextArea.value);
 
-      // Stop the spinning loading animation
       submitButton.classList.remove("submit-button--loading");
     })
     .catch(error => {
