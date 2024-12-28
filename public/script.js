@@ -2,6 +2,7 @@ const textArea = document.getElementById("text_to_summarize");
 const submitButton = document.getElementById("submit-button");
 const listenButton = document.getElementById("audio");
 
+
 //TextToSpeech
 let speech = new SpeechSynthesisUtterance();
 let voiceSelect = document.querySelector("select");
@@ -89,6 +90,7 @@ function submitData(e) {
     .then(summary => {
       // Update the output text area with the new summary
       summarizedTextArea.value = summary;
+      console.log("Actual log: "+ summarizedTextArea.value);
 
       // Stop the spinning loading animation
       submitButton.classList.remove("submit-button--loading");
