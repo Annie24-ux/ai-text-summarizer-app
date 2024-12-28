@@ -1,0 +1,128 @@
+const textArea = document.getElementById("text_to_summarize");
+const submitButton = document.getElementById("submit-button");
+const audioButton = document.getElementById("audio");
+const voiceSelect = document.querySelector("select");
+
+let speech = new SpeechSynthesisUtterance();
+let voices = [];
+
+// Ensure voices are loaded
+window.speechSynthesis.onvoiceschanged = () => {
+  voices = window.speechSynthesis.getVoices();
+
+  if (voices.length > 0) {
+    console.log("Available Voices:", voices);
+    speech.voice = voices[0]; // Set the default voice
+
+    // Populate the voice selection dropdown
+    voices.forEach((voice, i) => {
+      console.log(`Voice ${i}: ${voice.name}`);
+      voiceSelect.options[i] = new Option(voice.name, i);
+    });
+  } else {
+    console.error("No voices available.");
+  }
+};
+
+// Handle voice selection from the dropdown
+voiceSelect.addEventListener("change", () => {
+  const selectedIndex = Number(voiceSelect.value);
+  if (voices[selectedIndex]) {
+    speech.voice = voices[selectedIndex];
+    console.log(`Selected voice: ${voices[selectedIndex].name}`);
+  } else {
+    console.error("Selected voice is undefined.");
+  }
+});
+
+// Disable the submit button initially
+submitButton.disabled = true;
+
+// Listen for input changes and enable/disable the submit button
+const summarizedTextArea = document.getElementById("summary");
+textArea.addEventListener("input", verifyTextLength);
+
+// Handle form submission
+submitButton.addEventListener("click", submitData);
+
+// Handle audio button click
+audioButton.addEventListener("click", () => {
+  const summarizedTextArea = document.getElementById('summary');
+  const textToSpeak = summarizedTextArea.value.trim() || document.getElementById('text_to_summarize').value.trim();
+
+  if (!textToSpeak) {
+    console.error("No text to speak.");
+    return;
+  }
+
+  // Create a SpeechSynthesisUtterance object
+  const speech = new SpeechSynthesisUtterance(textToSpeak);
+
+  // Optionally, you can change the voice, rate, pitch, or volume
+  speech.lang = 'en-US';  // Language: English (US)
+  speech.pitch = 1;       // Default pitch (0 to 2)
+  speech.rate = 1;        // Speed of the speech (0.1 to 10)
+  speech.volume = 1;      // Volume level (0 to 1)
+
+  // Log the current voice being used
+  const voices = window.speechSynthesis.getVoices();
+  console.log(`Using voice: ${voices[0].name}`);
+
+  // Speak the text
+  window.speechSynthesis.speak(speech);
+
+  // Optional: Logging the status of speech synthesis
+  speech.onstart = () => {
+    console.log('Speech has started.');
+  };
+  speech.onend = () => {
+    console.log('Speech has ended.');
+  };
+});
+
+// Verify the length of the input text
+function verifyTextLength(e) {
+  const textarea = e.target;
+  const textLength = textarea.value.length;
+
+  if (textLength > 200 && textLength < 100000) {
+    submitButton.disabled = false;
+  } else {
+    submitButton.disabled = true;
+  }
+}
+
+// Submit the data to the server
+function submitData(e) {
+  submitButton.classList.add("submit-button--loading");
+
+  const text_to_summarize = textArea.value;
+
+  const myHeaders = new Headers();
+  myHeaders.append("Content-Type", "application/json");
+  myHeaders.append("Authorization", "Bearer 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");
+
+  const raw = JSON.stringify({
+    "text_to_summarize": text_to_summarize
+  });
+
+  const requestOptions = {
+    method: "POST",
+    headers: myHeaders,
+    body: raw,
+    redirect: "follow"
+  };
+
+  fetch('/summarize', requestOptions)
+    .then(response => response.text()) // Response will be summarized text
+    .then(summary => {
+      // Update the output text area with the new summary
+      summarizedTextArea.value = summary;
+
+      // Stop the spinning loading animation
+      submitButton.classList.remove("submit-button--loading");
+    })
+    .catch(error => {
+      console.error("Error:", error.message);
+    });
+}

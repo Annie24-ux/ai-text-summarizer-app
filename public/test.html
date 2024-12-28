@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Text-to-Speech Test</title>
+</head>
+<body>
+  <button id="speakButton">Speak</button>
+  <script>
+    const speakButton = document.getElementById("speakButton");
+    const utterance = new SpeechSynthesisUtterance();
+
+    speakButton.addEventListener("click", () => {
+      utterance.text = "This is a test message."; 
+      window.speechSynthesis.speak(utterance); 
+    });
+  </script>
+</body>
+</html>
