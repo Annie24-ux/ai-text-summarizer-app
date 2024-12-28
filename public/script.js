@@ -1,45 +1,20 @@
 const textArea = document.getElementById("text_to_summarize");
 const submitButton = document.getElementById("submit-button");
-const listenButton = document.getElementById("audio");
+const utterance = new SpeechSynthesisUtterance();
 
 
-//TextToSpeech
-let speech = new SpeechSynthesisUtterance();
-let voiceSelect = document.querySelector("select");
-let voices = [];
 
-window.speechSynthesis.onvoiceschanged = () => {
-  voices = window.speechSynthesis.getVoices();
-  speech.voice = voices[0];
+//NewVoice
+const speakButton = document.getElementById("speakButton");
 
-  // voices.forEach((voice, i) => (voiceSelect.options[i] = new Option(voice.name, i)));
-};
-
-// voiceSelect.addEventListener("change", () => {
-//   speech.voice = voices[voiceSelect.value]; // Get the voice object based on index
-//   speech.lang = voices[voiceSelect.value].lang; // Set language explicitly
-//   console.log("Chosen voice: " + speech.voice.name + " (" + speech.lang + ")");
-// });
-
-listenButton.addEventListener("click", () => {
-  speech.text = document.getElementById("summary").value;
-  console.log("Text to speak:", speech.text);
-  // console.log("Voice:", speech.voice.name);
-  console.log("Language:", speech.lang);
-  console.log("Attempting to speak...");
-
-  // Check if the speech synthesis engine is already speaking
-  if (window.speechSynthesis.speaking) {
-    console.log("Previous utterance is still speaking. Skipping this one.");
-    return;
-  }
-
-  try {
-    window.speechSynthesis.speak(speech);
-  } catch (error) {
-    console.error("Error speaking:", error);
-  }
+speakButton.addEventListener("click", () => {
+  utterance.text = "This is a test message."; 
+  console.log("Below voice...");
+  window.speechSynthesis.speak(utterance); 
 });
+
+
+
 
 // Disable the submit button initially
 submitButton.disabled = true;
