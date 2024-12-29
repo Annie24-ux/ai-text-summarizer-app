@@ -1,24 +1,23 @@
 const textArea = document.getElementById("text_to_summarize");
 const submitButton = document.getElementById("submit-button");
 const utterance = new SpeechSynthesisUtterance();
-
-
-
 const speakButton = document.getElementById("speakButton");
+const char = document.getElementById("char");
+const word = document.getElementById("word");
+
+
 
 speakButton.addEventListener("click", () => {
   utterance.text = summarizedTextArea.value; 
-  console.log("Below voice...");
   window.speechSynthesis.speak(utterance); 
 });
-
-
 
 
 submitButton.disabled = true;
 
 const summarizedTextArea = document.getElementById("summary");
 textArea.addEventListener("input", verifyTextLength);
+textArea.addEventListener("input", countCharAndWords);
 
 submitButton.addEventListener("click", submitData);
 
@@ -66,3 +65,19 @@ function submitData(e) {
       console.error("Error:", error.message);
     });
 }
+
+
+function countCharAndWords(){
+  let content = this.value;
+  char.textContent = content.length;
+
+  let wordList = content.trim().split(/\s+/);
+  console.log(content + " Characters");
+
+  let words = wordList.filter(function (element) {
+    return element !== "";
+  });
+
+  word.textContent = words.length;
+};
+  

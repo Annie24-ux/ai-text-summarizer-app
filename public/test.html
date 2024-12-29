@@ -1,18 +1,123 @@
 <!DOCTYPE html>
-<html>
-<head>
-  <title>Text-to-Speech Test</title>
-</head>
-<body>
-  <button id="speakButton">Speak</button>
-  <script>
-    const speakButton = document.getElementById("speakButton");
-    const utterance = new SpeechSynthesisUtterance();
+<html lang="en">
 
-    speakButton.addEventListener("click", () => {
-      utterance.text = "This is a test message."; 
-      window.speechSynthesis.speak(utterance); 
-    });
-  </script>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content=
+        "width=device-width, initial-scale=1.0">
+    <title>Word and Character Counter</title>
+    <style>
+      * {
+    margin: 0;
+    padding: 0;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.container {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.container h1 {
+    font-size: 25px;
+}
+.container h3 {
+    font-size: 20px;
+}
+
+.heading {
+    border: 2px solid green;
+    padding: 5px;
+    font-weight: 700;
+    text-align: center;
+    width: 400px;
+}
+
+#area {
+    height: 200px;
+    width: 400px;
+    resize: none;
+    font-size: 15px;
+    font-weight: 700;
+    padding: 5px;
+    margin-top: 15px;
+    color: green;
+    outline: none;
+    border: 2px solid green;
+}
+
+#area:focus {
+    border: 2px solid green;
+    outline: none;
+}
+
+.result {
+    color: green;
+    font-size: 20px;
+    width: 401px;
+    text-align: center;
+    font-weight: 700;
+    padding: 5px;
+    border: 2px solid green;
+    margin-top: 10px;
+}
+
+#word,
+#char {
+    font-size: 25px;
+    font-weight: bold;
+    text-decoration: underline;
+}
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="heading">
+            <h1 style="color:green">
+                GeeksforGeeks
+            </h1>
+            <h3>Word and Character count</h3>
+        </div>
+
+        <textarea id="area" 
+            placeholder="Enter your Text Here"></textarea>
+
+        <p class="result">
+            <span id="word">0</span> Words and
+            <span id="char">0</span> Characters
+        </p>
+    </div>
 </body>
+<script>
+  let area = document.getElementById('area');
+let char = document.getElementById('char');
+let word = document.getElementById('word');
+
+area.addEventListener('input', function () {
+
+    // Count characters 
+    let content = this.value;
+    char.textContent = content.length;
+
+    // Remove empty spaces from start and end 
+    content.trim();
+    console.log(content);
+
+    let wordList = content.split(/\s/);
+
+    // Remove spaces from between words 
+    let words = wordList.filter(function (element) {
+        return element != "";
+    });
+
+    // Count words 
+    word.textContent = words.length;
+});
+</script>
 </html>
